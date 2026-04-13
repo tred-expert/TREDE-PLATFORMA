@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADE PRO | Binance Edition</title>
+    <title>TRADE PRO | Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0b0e11; color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background-color: #0b0e11; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .binance-yellow { color: #f3ba2f; }
         .hidden { display: none; }
         .asset-row { border-bottom: 1px solid #1e2329; cursor: pointer; transition: 0.2s; }
         .asset-row:hover { background-color: #1e2329; }
+        .asset-logo { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid #363d48; color: white; }
     </style>
 </head>
 <body>
@@ -19,29 +20,17 @@
     <div id="authModal" class="fixed inset-0 bg-[#0b0e11] flex items-center justify-center z-50 p-4">
         <div class="bg-[#1e2329] p-8 rounded-3xl w-full max-w-md relative border border-gray-800 shadow-2xl">
             <div class="absolute top-4 right-4 flex items-center gap-4 text-gray-400">
-                <i class="fas fa-headset cursor-pointer" onclick="alert('Destek: @Admin')"></i>
+                <i class="fas fa-headset cursor-pointer" onclick="alert('Dəstək: @Admin')"></i>
                 <i class="fas fa-globe cursor-pointer" onclick="toggleMenu('langMenuAuth')"></i>
                 <div id="langMenuAuth" class="hidden absolute top-8 right-0 bg-[#2b3139] border border-gray-700 rounded-lg z-50 w-24">
                     <button onclick="changeLanguage('az')" class="w-full text-left px-4 py-2 text-xs border-b border-gray-700">AZ 🇦🇿</button>
                     <button onclick="changeLanguage('tr')" class="w-full text-left px-4 py-2 text-xs">TR 🇹🇷</button>
                 </div>
             </div>
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-black italic binance-yellow tracking-tighter">TRADE PRO</h1>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Global Exchange</p>
-            </div>
+            <div class="text-center mb-8"><h1 class="text-3xl font-black italic binance-yellow tracking-tighter">TRADE PRO</h1></div>
             <div id="loginForm" class="space-y-4">
-                <input id="user-input" type="text" placeholder="Kullanıcı Adı" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 focus:border-yellow-500 outline-none">
-                <input type="password" placeholder="Şifre" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 focus:border-yellow-500 outline-none">
-                <button onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase hover:bg-yellow-500">GİRİŞ YAP</button>
-                <p class="text-center text-sm text-gray-400">Hesabınız yok mu? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Kaydol</span></p>
-            </div>
-            <div id="registerForm" class="hidden space-y-4">
-                <input type="email" placeholder="E-posta" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 outline-none">
-                <input type="text" placeholder="Kullanıcı Adı" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 outline-none">
-                <input type="password" placeholder="Şifre" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 outline-none">
-                <button onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase">KAYIT OL</button>
-                <p class="text-center text-sm text-gray-400">Zaten üye misiniz? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Giriş</span></p>
+                <input id="user-input" type="text" placeholder="İstifadəçi Adı" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 outline-none">
+                <button id="login-btn" onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase">GİRİŞ YAP</button>
             </div>
         </div>
     </div>
@@ -50,7 +39,7 @@
         <header class="p-4 flex justify-between items-center border-b border-gray-800 bg-[#0b0e11]">
             <h1 class="binance-yellow text-xl font-black italic">TRADE PRO</h1>
             <div class="flex items-center gap-4 text-gray-400">
-                <i class="fas fa-headset cursor-pointer" onclick="alert('Destek: @Admin')"></i>
+                <i class="fas fa-headset cursor-pointer" onclick="alert('Dəstək: @Admin')"></i>
                 <i class="fas fa-globe cursor-pointer" onclick="toggleMenu('langMenuMain')"></i>
                 <div id="langMenuMain" class="hidden absolute top-12 right-4 bg-[#2b3139] border border-gray-700 rounded-lg z-50 w-24 shadow-xl">
                     <button onclick="changeLanguage('az')" class="w-full text-left px-4 py-2 text-xs border-b border-gray-700">AZ</button>
@@ -64,41 +53,33 @@
             <button onclick="showTab('wallet')" id="tab-wa" class="text-gray-400">Pul Kisəsi</button>
         </div>
 
-        <div id="exchange-tab" class="flex-grow overflow-y-auto">
-            <div id="assets-container" class="bg-[#0b0e11]"></div>
-        </div>
+        <div id="exchange-tab" class="flex-grow overflow-y-auto"><div id="assets-container"></div></div>
 
-        <div id="trade-window" class="hidden flex flex-col flex-grow bg-[#0b0e11]">
-            <div class="p-4 border-b border-gray-800">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <button onclick="showTab('exchange')" class="text-gray-400"><i class="fas fa-arrow-left"></i></button>
-                        <h2 id="trade-pair-name" class="font-bold text-lg text-white">BTC/USDT</h2>
-                    </div>
-                    <div class="text-right">
-                        <p id="trade-current-price" class="text-xl font-bold text-green-500">71,143.48</p>
-                        <p class="text-[10px] text-gray-500">≈ $71,143.48 <span class="text-green-500">+0.57%</span></p>
-                    </div>
+        <div id="trade-window" class="hidden flex flex-col fixed inset-0 z-40 bg-[#0b0e11]">
+            <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <button onclick="showTab('exchange')" class="text-gray-400"><i class="fas fa-arrow-left"></i></button>
+                    <h2 id="trade-pair-name" class="font-bold text-lg text-white">BTC/USDT</h2>
                 </div>
+                <p id="trade-price-val" class="text-lg font-bold text-green-500">CANLI</p>
             </div>
             <div id="tv_container" class="flex-grow"></div>
             <div class="p-4 bg-[#1e2329] border-t border-gray-800 grid grid-cols-2 gap-4">
-                <button onclick="requestDeposit()" class="bg-[#2ebd85] py-4 rounded-xl font-bold text-white uppercase">Al</button>
-                <button onclick="requestDeposit()" class="bg-[#f6465d] py-4 rounded-xl font-bold text-white uppercase">Satış</button>
+                <button id="buy-btn" onclick="requestDeposit()" class="bg-[#2ebd85] py-4 rounded-xl font-bold uppercase">Al</button>
+                <button id="sell-btn" onclick="requestDeposit()" class="bg-[#f6465d] py-4 rounded-xl font-bold uppercase">Satış</button>
             </div>
         </div>
 
         <div id="wallet-tab" class="hidden flex-grow p-8 text-center bg-[#0b0e11]">
             <div class="bg-[#1e2329] p-8 rounded-2xl border border-gray-800">
-                <p class="text-gray-400 text-sm mb-2">Toplam Varlıklar</p>
-                <h2 class="text-3xl font-bold mb-8">0.00 <span class="text-sm text-gray-500">USDT</span></h2>
-                <button onclick="requestDeposit()" class="w-full bg-[#2ebd85] py-4 rounded-xl font-bold mb-4 uppercase">Yatırım Yap</button>
-                <button onclick="alert('Yetersiz Bakiye')" class="w-full bg-gray-700 py-4 rounded-xl font-bold uppercase">Para Çek</button>
+                <p id="wallet-title" class="text-gray-400 text-sm mb-2">Bakiyeniz</p>
+                <h2 class="text-3xl font-bold mb-8 binance-yellow">0.00 USDT</h2>
+                <button id="dep-btn" onclick="requestDeposit()" class="w-full bg-[#2ebd85] py-4 rounded-xl font-bold uppercase">YATIRIM YAP</button>
             </div>
         </div>
     </div>
 
-    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
