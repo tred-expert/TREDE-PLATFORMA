@@ -5,106 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRADE PRO | Global Trading Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0b0e11; color: #eaecef; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: #0b0e11; color: #eaecef; font-family: 'Inter', sans-serif; }
         .binance-yellow { color: #f3ba2f; }
         .binance-bg-gray { background-color: #1e2329; }
         .modal { display: flex; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.98); justify-content: center; align-items: center; }
-        input { background-color: #2b3139; border: 1px solid #474d57; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px; width: 100%; outline: none; transition: 0.2s; }
-        input:focus { border-color: #f3ba2f; }
+        input { background-color: #2b3139; border: 1px solid #474d57; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px; width: 100%; outline: none; }
         .hidden { display: none !important; }
-        .lang-dropdown { position: absolute; top: 60px; right: 20px; background: #1e2329; border: 1px solid #474d57; border-radius: 8px; display: none; flex-direction: column; z-index: 1000; overflow: hidden; }
-        .lang-option { padding: 12px 24px; cursor: pointer; transition: 0.2s; }
-        .lang-option:hover { background: #2b3139; color: #f3ba2f; }
+        .lang-dropdown { position: absolute; top: 45px; right: 0; background: #2b3139; border: 1px solid #474d57; border-radius: 8px; display: none; flex-direction: column; z-index: 1000; min-width: 120px; }
+        .lang-option { padding: 10px 15px; cursor: pointer; font-size: 14px; }
+        .lang-option:hover { background: #3b4149; color: #f3ba2f; }
     </style>
 </head>
 <body>
 
 <div id="authModal" class="modal">
-    <div style="position: absolute; top: 20px; right: 20px;">
-        <i class="fas fa-globe text-2xl cursor-pointer hover:text-[#f3ba2f]" onclick="toggleLangMenu()"></i>
-        <div id="langMenu" class="lang-dropdown">
-            <div class="lang-option" onclick="changeLanguage('az')">Azərbaycan 🇦🇿</div>
-            <div class="lang-option" onclick="changeLanguage('tr')">Türkçe 🇹🇷</div>
-            <div class="lang-option" onclick="changeLanguage('en')">English 🇺🇸</div>
-            <div class="lang-option" onclick="changeLanguage('ru')">Русский 🇷🇺</div>
+    <div class="binance-bg-gray p-8 rounded-2xl w-full max-w-sm shadow-2xl mx-4 border border-gray-800 relative">
+        
+        <div class="absolute top-4 right-4">
+            <button onclick="toggleLangMenu()" class="text-gray-400 hover:text-[#f3ba2f] transition-all">
+                <i class="fas fa-globe text-xl"></i>
+            </button>
+            <div id="langMenu" class="lang-dropdown shadow-xl">
+                <div class="lang-option" onclick="changeLanguage('az')">AZ 🇦🇿</div>
+                <div class="lang-option" onclick="changeLanguage('tr')">TR 🇹🇷</div>
+                <div class="lang-option" onclick="changeLanguage('en')">EN 🇺🇸</div>
+                <div class="lang-option" onclick="changeLanguage('ru')">RU 🇷🇺</div>
+            </div>
         </div>
-    </div>
 
-    <div class="binance-bg-gray p-8 rounded-2xl w-full max-w-sm shadow-2xl mx-4 border border-gray-800">
         <div class="text-center mb-8">
             <h2 class="binance-yellow text-4xl font-black italic tracking-tighter">TRADE PRO</h2>
-            <p id="auth-subtitle" class="text-gray-400 text-sm mt-2">Geleceğin ticaretine hoş geldiniz</p>
+            <p id="auth-subtitle" class="text-gray-400 text-xs mt-2 uppercase tracking-widest">Global Exchange</p>
         </div>
         
         <div id="loginForm">
             <input type="text" id="user-input" placeholder="E-posta veya Kullanıcı Adı">
             <input type="password" id="pass-input" placeholder="Şifre">
-            <button onclick="login()" id="login-btn" class="w-full bg-[#f3ba2f] hover:bg-[#dca327] text-black font-bold py-4 rounded-lg mb-6 transition-all text-sm uppercase tracking-widest">Giriş Yap</button>
-            <p class="text-xs text-center text-gray-400">Hesabınız yok mu? <span class="binance-yellow cursor-pointer hover:underline" onclick="toggleAuth()">Hemen Kaydol</span></p>
+            <button onclick="login()" id="login-btn" class="w-full bg-[#f3ba2f] hover:bg-[#dca327] text-black font-bold py-4 rounded-lg mb-6 text-sm uppercase">Giriş Yap</button>
+            <p class="text-xs text-center text-gray-400" id="no-acc-text">Hesabınız yok mu? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Hemen Kaydol</span></p>
         </div>
 
         <div id="registerForm" class="hidden">
             <input type="email" placeholder="E-posta">
             <input type="text" placeholder="Kullanıcı Adı">
             <input type="password" placeholder="Şifre">
-            <button onclick="login()" id="reg-btn" class="w-full bg-[#f3ba2f] hover:bg-[#dca327] text-black font-bold py-4 rounded-lg mb-6 transition-all text-sm uppercase tracking-widest">Kayıt Ol</button>
-            <p class="text-xs text-center text-gray-400">Zaten üye misiniz? <span class="binance-yellow cursor-pointer hover:underline" onclick="toggleAuth()">Giriş Yap</span></p>
+            <button onclick="login()" id="reg-btn" class="w-full bg-[#f3ba2f] hover:bg-[#dca327] text-black font-bold py-4 rounded-lg mb-6 text-sm uppercase">Kayıt Ol</button>
+            <p class="text-xs text-center text-gray-400" id="has-acc-text">Zaten üye misiniz? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Giriş Yap</span></p>
         </div>
     </div>
 </div>
 
 <div id="mainContent" class="p-4 hidden">
     <header class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-        <h1 class="binance-yellow text-2xl font-black italic tracking-tighter">TRADE PRO</h1>
-        <button onclick="connectWallet()" class="bg-[#2b3139] hover:bg-[#3b4149] px-5 py-2 rounded-lg text-xs font-bold border border-gray-700 transition-all">Cüzdanı Bağla</button>
+        <h1 class="binance-yellow text-2xl font-black italic">TRADE PRO</h1>
+        <button onclick="connectWallet()" id="wallet-btn" class="bg-[#2b3139] px-4 py-2 rounded-lg text-xs font-bold border border-gray-700">Cüzdanı Bağla</button>
     </header>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-4">
-            <div class="bg-[#1e2329] p-1 rounded-2xl border border-gray-800 shadow-lg" style="height: 480px;">
+            <div class="bg-[#1e2329] p-1 rounded-2xl border border-gray-800" style="height: 400px;">
                 <div id="tradingview_btc" style="height: 100%;"></div>
             </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-[#1e2329] p-4 rounded-xl border border-gray-800">
-                    <p class="text-gray-500 text-[10px] font-bold uppercase" id="gold-lbl">ALTIN (XAU)</p>
-                    <p class="text-lg font-bold text-green-500">$2,354.10</p>
-                </div>
-                <div class="bg-[#1e2329] p-4 rounded-xl border border-gray-800">
-                    <p class="text-gray-500 text-[10px] font-bold uppercase" id="silver-lbl">GÜMÜŞ (XAG)</p>
-                    <p class="text-lg font-bold text-green-500">$28.45</p>
-                </div>
-                <div class="bg-[#1e2329] p-4 rounded-xl border border-gray-800">
-                    <p class="text-gray-500 text-[10px] font-bold uppercase">ETHEREUM</p>
-                    <p class="text-lg font-bold text-red-500">$3,520.12</p>
-                </div>
-                <div class="bg-[#1e2329] p-4 rounded-xl border border-gray-800">
-                    <p class="text-gray-500 text-[10px] font-bold uppercase">SOLANA</p>
-                    <p class="text-lg font-bold text-green-500">$174.40</p>
-                </div>
-            </div>
         </div>
-
-        <div class="binance-bg-gray p-6 rounded-2xl border border-gray-800 flex flex-col shadow-2xl">
-            <h3 class="text-sm font-bold mb-6 border-b border-gray-700 pb-3 uppercase tracking-widest text-gray-500" id="panel-title">Profil Özeti</h3>
-            <div class="mb-10">
-                <p class="text-gray-500 text-xs mb-2" id="bal-lbl">Toplam Varlık (USDT)</p>
-                <div class="flex items-baseline gap-2">
-                    <p id="user-balance" class="text-5xl font-black binance-yellow tracking-tighter">0.00</p>
-                    <p class="text-gray-400 font-bold text-sm">USDT</p>
-                </div>
-            </div>
-            <div class="space-y-4 mb-8">
-                <button onclick="deposit()" class="w-full bg-[#2ebd85] hover:bg-[#27a171] text-white font-bold py-4 rounded-xl text-sm transition-all shadow-lg shadow-green-900/20" id="dep-btn">YATIRIM YAP</button>
-                <button class="w-full bg-[#f6465d] hover:bg-[#d93e4f] text-white font-bold py-4 rounded-xl text-sm transition-all shadow-lg shadow-red-900/20" id="wit-btn">PARA ÇEK</button>
-            </div>
-            <div class="mt-auto p-4 bg-[#0b0e11] rounded-xl border border-gray-800">
-                <p class="text-[10px] text-gray-500 leading-relaxed italic text-center" id="footer-note">
-                    İşlemleriniz Trust Wallet protokolü ile uçtan uca şifrelenmektedir.
-                </p>
-            </div>
+        <div class="binance-bg-gray p-6 rounded-2xl border border-gray-800">
+            <p class="text-gray-500 text-xs mb-1">Toplam Varlık (USDT)</p>
+            <p id="user-balance" class="text-4xl font-black binance-yellow mb-6">0.00</p>
+            <button onclick="deposit()" class="w-full bg-[#2ebd85] text-white font-bold py-4 rounded-xl mb-3">YATIRIM YAP</button>
+            <button class="w-full bg-[#f6465d] text-white font-bold py-4 rounded-xl">PARA ÇEK</button>
         </div>
     </div>
 </div>
