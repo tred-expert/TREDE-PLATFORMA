@@ -1,109 +1,41 @@
-// --- TRADE PRO - TAM VƏ SƏHVSİZ KOD ---
-
-let balance = 0.00;
-let hasDeposited = false;
-
-// 1. DİL MENYUSU VƏ QLOBUS FUNKSİYASI
-function toggleLangMenu() {
-    const menu = document.getElementById('langMenu');
-    if (menu) {
-        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+// --- DİL VƏ KEÇİD SİSTEMİ ---
+let currentLang = 'tr';
+const translations = {
+    'az': { 
+        ex: 'Mübadilə', wa: 'Pul Kisəsi', buy: 'Al', sell: 'Satış', dep: 'YATIRIM YAP', 
+        bal: 'Toplam Balansınız', login: 'GİRİŞ YAP', reg: 'KAYIT OL',
+        noAcc: 'Hesabınız yoxdur?', alreadyAcc: 'Artıq üzvüsünüz?',
+        userPlace: 'İstifadəçi Adı', emailPlace: 'E-poçt'
+    },
+    'tr': { 
+        ex: 'Mübadilə', wa: 'Pul Kisəsi', buy: 'Al', sell: 'Satış', dep: 'YATIRIM YAP', 
+        bal: 'Toplam Bakiyeniz', login: 'GİRİŞ YAP', reg: 'KAYIT OL',
+        noAcc: 'Hesabınız yok mu?', alreadyAcc: 'Zaten üye misiniz?',
+        userPlace: 'Kullanıcı Adı', emailPlace: 'E-posta'
     }
-}
+};
 
 function changeLanguage(lang) {
-    const translations = {
-        'az': {
-            login: 'Giriş Et', register: 'Qeydiyyat',
-            noAcc: 'Hesabınız yoxdur? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Qeydiyyat</span>',
-            hasAcc: 'Artıq hesabınız var? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Giriş</span>',
-            wallet: 'Cüzdanı Bağla', dep: 'YATIRIM ET', wit: 'PUL ÇIXAR'
-        },
-        'tr': {
-            login: 'Giriş Yap', register: 'Kayıt Ol',
-            noAcc: 'Hesabınız yok mu? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Hemen Kaydol</span>',
-            hasAcc: 'Zaten üye misiniz? <span class="binance-yellow cursor-pointer underline" onclick="toggleAuth()">Giriş Yap</span>',
-            wallet: 'Cüzdanı Bağla', dep: 'YATIRIM YAP', wit: 'PARA ÇEK'
-        }
-    };
-
-    if (translations[lang]) {
-        document.getElementById('login-btn').innerText = translations[lang].login;
-        document.getElementById('reg-btn').innerText = translations[lang].register;
-        document.getElementById('no-acc-text').innerHTML = translations[lang].noAcc;
-        document.getElementById('has-acc-text').innerHTML = translations[lang].hasAcc;
-        document.getElementById('wallet-btn').innerText = translations[lang].wallet;
-        document.getElementById('dep-btn').innerText = translations[lang].dep;
-        document.getElementById('wit-btn').innerText = translations[lang].wit;
-    }
-    toggleLangMenu();
-}
-
-// 2. AĞILLI GİRİŞ FUNKSİYASI (HƏM KAYIT, HƏM GİRİŞ ÜÇÜN)
-function login() {
-    const registerForm = document.getElementById('registerForm');
-    const isRegistering = registerForm && !registerForm.classList.contains('hidden');
-
-    // Əgər Giriş hissəsindədirsə, xananı yoxla. Qeydiyyatdadırsa, yoxlama.
-    if (!isRegistering) {
-        const user = document.getElementById('user-input').value;
-        if (user === "") {
-            alert("Lütfen kullanıcı adınızı girin!");
-            return;
-        }
-    }
-
-    // Giriş uğurludur, ana səhifəni aç
-    document.getElementById('authModal').classList.add('hidden');
-    document.getElementById('mainContent').classList.remove('hidden');
+    currentLang = lang;
+    const t = translations[lang];
+    document.getElementById('tab-ex').innerText = t.ex;
+    document.getElementById('tab-wa').innerText = t.wa;
+    document.getElementById('buy-btn').innerText = t.buy;
+    document.getElementById('sell-btn').innerText = t.sell;
+    document.getElementById('dep-btn').innerText = t.dep;
+    document.getElementById('wallet-title').innerText = t.bal;
+    document.getElementById('login-btn-text').innerText = t.login;
+    document.getElementById('reg-btn-text').innerText = t.reg;
+    document.getElementById('no-acc-text').innerText = t.noAcc;
+    document.getElementById('already-acc-text').innerText = t.alreadyAcc;
     
-    // TradingView Qrafikini başlat
-    if (typeof TradingView !== 'undefined') {
-        new TradingView.widget({
-            "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "1",
-            "theme": "dark", "style": "1", "locale": "tr", "container_id": "tradingview_btc"
-        });
-    }
-}
+    // Placeholderləri dəyiş
+    document.getElementById('login-user').placeholder = t.userPlace;
+    document.getElementById('reg-user').placeholder = t.userPlace;
+    document.getElementById('reg-email').placeholder = t.emailPlace;
 
-// 3. TRADE (AL/SAT) SİSTEMİ
-function trade(type) {
-    if(!hasDeposited) {
-        alert("Bakiyeniz yetersiz! Lütfen önce yatırım yapın.");
-        return;
-    }
-
-    let profit = (Math.random() * 3.5).toFixed(2);
-    if(type === 'buy') {
-        balance = parseFloat(balance) + parseFloat(profit);
-        alert("Alış emri başarılı! Kar: +" + profit + " USDT");
-    } else {
-        balance = parseFloat(balance) - (profit / 2);
-        alert("Satış yapıldı. Zarar minimize edildi.");
-    }
-    updateUI();
-}
-
-// 4. YATIRIM SİSTEMİ
-function deposit() {
-    const myAddress = "TS2b7...ADRESINI_BURA_YAZ"; // Öz USDT adresini bura qoy
-    alert("Yatırım yapmadan ticaret başlayamaz.\n\nUSDT (TRC-20) Adresiniz:\n" + myAddress);
-    
-    let confirmPay = confirm("Ödemeyi yaptınız mı?");
-    if(confirmPay) {
-        alert("İşleminiz onaylanıyor... 5 saniye bekleyin.");
-        setTimeout(() => {
-            balance = 100.00;
-            hasDeposited = true;
-            updateUI();
-            alert("Tebrikler! 100 USDT hesabınıza tanımlandı.");
-        }, 5000);
-    }
-}
-
-// 5. KÖMƏKÇİ FUNKSİYALAR
-function updateUI() {
-    document.getElementById('user-balance').innerText = balance.toFixed(2);
+    document.getElementById('langMenuAuth').classList.add('hidden');
+    document.getElementById('langMenuMain').classList.add('hidden');
 }
 
 function toggleAuth() {
@@ -111,9 +43,60 @@ function toggleAuth() {
     document.getElementById('registerForm').classList.toggle('hidden');
 }
 
-function connectWallet() {
-    const btn = document.getElementById('wallet-btn');
-    btn.innerText = "0x71...4a2 (Bağlı)";
-    btn.style.backgroundColor = "#2ebd85";
-    alert("Trust Wallet başarıyla bağlandı!");
+// --- ELEMENTLƏR VƏ QRAFİKLƏR ---
+const assets = [
+    { s: 'BTC', n: 'Bitcoin', p: '71,111', c: '-2.6%', l: '#f7931a' },
+    { s: 'ETH', n: 'Ethereum', p: '3,542', c: '-1.5%', l: '#627eea' },
+    { s: 'SOL', n: 'Solana', p: '145', c: '+3.1%', l: '#a236d6' },
+    { s: 'XRP', n: 'Ripple', p: '0.62', c: '-0.4%', l: '#23292f' },
+    { s: 'PEPE', n: 'Pepe', p: '0.000008', c: '+12%', l: '#226b3e' },
+    { s: 'BNB', n: 'Binance', p: '595', c: '-1.7%', l: '#f3ba2f' },
+    { s: 'DOGE', n: 'Doge', p: '0.15', c: '+2.4%', l: '#c3a634' },
+    { s: 'XAU', n: 'Qızıl', p: '2,345', c: '+0.4%', l: '#d4af37' },
+    { s: 'XAG', n: 'Gümüş', p: '28', c: '-1.1%', l: '#c0c0c0' },
+    { s: 'OIL', n: 'Neft', p: '90', c: '+1.2%', l: '#3c3c3c' }
+];
+
+function initAssets() {
+    const container = document.getElementById('assets-container');
+    container.innerHTML = assets.map(a => `
+        <div class="asset-row p-4 flex justify-between items-center" onclick="openTrade('${a.s}')">
+            <div class="flex items-center gap-3">
+                <div class="asset-logo" style="background-color: ${a.l}">${a.s.substring(0,2)}</div>
+                <div><p class="font-bold text-sm text-white">${a.s}/USDT</p><p class="text-gray-500 text-[10px]">${a.n}</p></div>
+            </div>
+            <div class="text-right"><p class="text-sm font-mono text-white">${a.p}</p><p class="${a.c.includes('+') ? 'text-green-500' : 'text-red-500'} text-[10px]">${a.c}</p></div>
+        </div>
+    `).join('');
 }
+
+function openTrade(symbol) {
+    document.getElementById('exchange-tab').classList.add('hidden');
+    document.getElementById('trade-window').classList.remove('hidden');
+    document.getElementById('trade-pair-name').innerText = symbol + "/USDT";
+    const container = document.getElementById('tv_container');
+    container.innerHTML = ""; 
+    setTimeout(() => {
+        new TradingView.widget({
+            "autosize": true, "symbol": (symbol === 'XAU' || symbol === 'XAG' ? "OANDA:"+symbol+"USD" : "BINANCE:"+symbol+"USDT"),
+            "interval": "1", "theme": "dark", "style": "1", "locale": currentLang, "container_id": "tv_container"
+        });
+    }, 100);
+}
+
+function showTab(tab) {
+    document.getElementById('exchange-tab').classList.add('hidden');
+    document.getElementById('wallet-tab').classList.add('hidden');
+    document.getElementById('trade-window').classList.add('hidden');
+    document.getElementById(tab + '-tab').classList.remove('hidden');
+    if(tab === 'exchange') initAssets();
+}
+
+function login() {
+    document.getElementById('authModal').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+    initAssets();
+}
+
+function toggleMenu(id) { document.getElementById(id).classList.toggle('hidden'); }
+function requestDeposit() { alert("Yetersiz Bakiye! Lütfen USDT (TRC-20) adresine yatırım yapın."); }
