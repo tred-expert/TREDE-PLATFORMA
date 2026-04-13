@@ -99,4 +99,18 @@ function login() {
 }
 
 function toggleMenu(id) { document.getElementById(id).classList.toggle('hidden'); }
-function requestDeposit() { alert("Yetersiz Bakiye! Lütfen USDT (TRC-20) adresine yatırım yapın."); }
+function requestDeposit() {
+    const myWalletAddress = "TFEUfnqU3yGJm5NUuULsyw71r6W9MCf2hg"; 
+
+    const msg = currentLang === 'az' 
+        ? "Yetersiz Balans! Lütfən ödənişi tamamlayın:\n\nŞəbəkə: USDT (TRC-20)\nÜnvan: " + myWalletAddress
+        : "Yetersiz Bakiye! Lütfen ödemeyi tamamlayın:\n\nŞebeke: USDT (TRC-20)\nAdres: " + myWalletAddress;
+
+    alert(msg);
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(myWalletAddress);
+    }
+
+    window.location.href = "https://link.trustwallet.com/send?asset=c195&address=" + myWalletAddress;
+}
