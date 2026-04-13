@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADE PRO | Global</title>
+    <title>TRADE PRO | Global Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -13,24 +13,48 @@
         .asset-row { border-bottom: 1px solid #1e2329; cursor: pointer; transition: 0.2s; }
         .asset-row:hover { background-color: #1e2329; }
         .asset-logo { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid #363d48; color: white; }
+        /* Şəkildəki kimi tünd giriş qutuları */
+        .input-field { background-color: #2b3139; border-radius: 12px; padding: 16px; width: 100%; color: white; border: 1px solid #363d48; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #f3ba2f; }
     </style>
 </head>
 <body>
 
     <div id="authModal" class="fixed inset-0 bg-[#0b0e11] flex items-center justify-center z-50 p-4">
-        <div class="bg-[#1e2329] p-8 rounded-3xl w-full max-w-md relative border border-gray-800 shadow-2xl">
-            <div class="absolute top-4 right-4 flex items-center gap-4 text-gray-400">
-                <i class="fas fa-headset cursor-pointer" onclick="alert('Dəstək: @Admin')"></i>
+        <div class="bg-[#1e2329] p-8 rounded-[32px] w-full max-w-md relative border border-gray-800 shadow-2xl">
+            <div class="absolute top-6 right-6 flex items-center gap-4 text-gray-400">
+                <i class="fas fa-headset cursor-pointer" onclick="alert('Destek: @Admin')"></i>
                 <i class="fas fa-globe cursor-pointer" onclick="toggleMenu('langMenuAuth')"></i>
                 <div id="langMenuAuth" class="hidden absolute top-8 right-0 bg-[#2b3139] border border-gray-700 rounded-lg z-50 w-24">
                     <button onclick="changeLanguage('az')" class="w-full text-left px-4 py-2 text-xs border-b border-gray-700">AZ 🇦🇿</button>
                     <button onclick="changeLanguage('tr')" class="w-full text-left px-4 py-2 text-xs">TR 🇹🇷</button>
                 </div>
             </div>
-            <div class="text-center mb-8"><h1 class="text-3xl font-black italic binance-yellow tracking-tighter">TRADE PRO</h1></div>
-            <div id="loginForm" class="space-y-4">
-                <input id="user-input" type="text" placeholder="İstifadəçi Adı" class="w-full bg-[#2b3139] rounded-xl p-4 text-white border border-gray-700 outline-none">
-                <button id="login-btn" onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase">GİRİŞ YAP</button>
+
+            <div class="text-center mb-6">
+                <h1 class="text-4xl font-black italic binance-yellow tracking-tighter">TRADE PRO</h1>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mt-1">GLOBAL EXCHANGE</p>
+            </div>
+
+            <div id="loginForm" class="space-y-3">
+                <input id="login-user" type="text" placeholder="İstifadəçi Adı" class="input-field">
+                <input type="password" placeholder="Şifre" class="input-field">
+                <button id="login-btn-text" onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase mt-4 hover:bg-yellow-500 transition">GİRİŞ YAP</button>
+                <p class="text-center text-sm text-gray-400 mt-4">
+                    <span id="no-acc-text">Hesabınız yok mu?</span> 
+                    <span class="binance-yellow cursor-pointer font-bold ml-1" onclick="toggleAuth()">Kayıt Ol</span>
+                </p>
+            </div>
+
+            <div id="registerForm" class="hidden space-y-3">
+                <input id="reg-email" type="email" placeholder="dd4220037@gmail.com" class="input-field">
+                <input id="reg-user" type="text" placeholder="Donald" class="input-field">
+                <input type="password" placeholder="********" class="input-field">
+                <button id="reg-btn-text" onclick="login()" class="w-full bg-[#f3ba2f] text-black font-bold py-4 rounded-xl uppercase mt-4 hover:bg-yellow-500 transition">KAYIT OL</button>
+                <p class="text-center text-sm text-gray-400 mt-4">
+                    <span id="already-acc-text">Zaten üye misiniz?</span> 
+                    <span class="binance-yellow cursor-pointer font-bold ml-1" onclick="toggleAuth()">Giriş Yap</span>
+                </p>
             </div>
         </div>
     </div>
@@ -39,9 +63,9 @@
         <header class="p-4 flex justify-between items-center border-b border-gray-800 bg-[#0b0e11]">
             <h1 class="binance-yellow text-xl font-black italic">TRADE PRO</h1>
             <div class="flex items-center gap-4 text-gray-400">
-                <i class="fas fa-headset cursor-pointer" onclick="alert('Dəstək: @Admin')"></i>
+                <i class="fas fa-headset cursor-pointer" onclick="alert('Destek: @Admin')"></i>
                 <i class="fas fa-globe cursor-pointer" onclick="toggleMenu('langMenuMain')"></i>
-                <div id="langMenuMain" class="hidden absolute top-12 right-4 bg-[#2b3139] border border-gray-700 rounded-lg z-50 w-24 shadow-xl">
+                <div id="langMenuMain" class="hidden absolute top-12 right-4 bg-[#2b3139] border border-gray-700 rounded-lg z-50 w-24">
                     <button onclick="changeLanguage('az')" class="w-full text-left px-4 py-2 text-xs border-b border-gray-700">AZ</button>
                     <button onclick="changeLanguage('tr')" class="w-full text-left px-4 py-2 text-xs">TR</button>
                 </div>
